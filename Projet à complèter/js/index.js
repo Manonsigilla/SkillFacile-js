@@ -79,11 +79,10 @@ for (let i = 0; i < links.length; i++) {
 function openNewsletter() {
     // Création de la fenêtre modale
     let newsletter = document.createElement("div");
-    newsletter.setAttribute("id", "newsletter-modal");
+    newsletter.setAttribute("class", "form-container");
 
     // Création du formulaire de la fenêtre modale
     let form = document.createElement("form");
-    form.setAttribute("class", "form-container");
 
     // Création de l'élément d'entrée email
     let input = document.createElement("input");
@@ -110,7 +109,7 @@ function openNewsletter() {
     // Ajout du formulaire à la fenêtre modale
     form.appendChild(input);
     form.appendChild(button);
-    form.appendChild(close);
+    newsletter.appendChild(close);
 
     // Ajout du formulaire à la fenêtre modale
     newsletter.appendChild(form);
@@ -135,7 +134,6 @@ function openNewsletter() {
     // Au clic sur le bouton d'inscription à la newsletter, afficher un message de confirmation
     button.addEventListener("click", function (e) {
         form.innerHTML = `
-        <i class="fas fa-times"></i>
         <h3 class="subtitle">Félicitations pour votre inscription à la newsletter</h3>`;
 
         e.preventDefault();
@@ -150,36 +148,80 @@ document.getElementById("newsletter").addEventListener("click", function (e) {
 
 // Modale contact : Créer la modale de contact en utilisant la balise dialogue. Pour cette partie là, vous ne devez pas utiliser de createElement. Bonus : Mettre en place un message lorsque l'utilisateur
 
-let formRecup = document.querySelector('#contact div');
 let formButton = document.getElementById('contact-button');
 
-// remove post method
-let formMethod = document.querySelector('#contact div form');
-formMethod.removeAttribute("method", "post");
-
-
-// Display form dialog
-formButton.addEventListener('click', () => {
-    let form = document.createElement("dialog");
-    let closeButton = document.createElement("button");
-    closeButton.innerHTML = `<i class="fas fa-times"></i>`;
-    document.body.appendChild(form);
-    form.appendChild(formRecup);
-    form.appendChild(closeButton);
-
-    form.showModal();
-    formRecup.querySelector("form").addEventListener("submit", function(e) {
+formButton.addEventListener("click", function (e) {
+    const dialog = document.querySelector('dialog');
+    if (dialog !== null) {
+        closeContact(dialog);
+        dialog.remove();
+        return;
+    }
+        openContact();
         e.preventDefault();
-        contact.innerHTML = `
-        <h3 class="subtitle">Votre demande a bien été envoyée</h3>
-        `;
-    });
-    // Close button
-    closeButton.addEventListener('click', () => {
-        form.close();
-    })
+});
 
-})
+function closeContact(dialog) {
+    dialog.remove();
+}
+
+function openContact() {
+    const formulaire = `
+    <dialog open>
+    <i class="fa-solid fa-x closeContact"></i>
+    <h1 class="subtitle">Contactez-nous</h1>
+    <form action="#" method="">
+        <input id="name" type="text" placeholder="Votre nom et prénom">
+        <input id="phone" type="tel" placeholder="Votre numéro de téléphone">
+        <input id="company" type="text" placeholder="Le nom de votre entreprise">
+        <input id="mail" type="email" placeholder="Votre adresse mail">
+        <select>
+            <option value="Je veux des renseignements concernant l'accompagnement perso">Je veux des renseignements concernant l'accompagnement perso</option>
+            <option value="Je veux des renseignements concernant l'accompagnement small group">Je veux des renseignements concernant l'accompagnement small group</option>
+            <option value="Je veux des renseignements concernant la formation digitale">Je veux des renseignements concernant la formation digitale</option>
+            <option value="Je veux des renseignements concernant le coaching digital">Je veux des renseignements concernant le coaching digital</option>
+            <option value="J'ai une autre demande">J'ai une autre demande</option>
+        </select>
+        <textarea cols="30" rows="10" placeholder="Précisez votre demande afin de faciliter l'échange lorsqu'un de nos conseillers vous appellera"></textarea>
+        <label for="RGPD"><input id="RGPD" type="checkbox" required="required">  En soumettant ce formulaire, j'accepte que les informations saisies soient transmises par mail à l'équipe de SkillFacile dans le but d'être recontacté concernant la demande effectuée. Je comprends que j'ai un droit de modification, d'accès et de suppression de mes informations personnelles.</label>
+        <input id="submit" type="submit" value="Envoyer la demande">                    
+    </form>
+</dialog>
+    `;
+    const emplacement = document.querySelector('#admin');
+    emplacement.insertAdjacentHTML('beforebegin', formulaire);
+
+    // Au clic sur le bouton de fermeture de la fenêtre modale
+    const close = document.querySelector(".closeContact");
+    const dialog = document.querySelector('dialog');
+
+    close.addEventListener("click", function (e) {
+        dialog.remove();
+        e.preventDefault();
+    });
+
+    // message de confirmation
+
+    const submit = document.querySelector("#submit");
+
+    submit.addEventListener("click", function (e) {
+        const form = document.querySelector("form");
+        const RGPD = document.querySelector("#RGPD");
+
+        if (RGPD.checked) {
+            const message = document.createElement("p");
+            message.innerHTML = "Votre demande a bien été envoyée";
+            form.style.display = "none";
+            const titre = document.querySelector('h1');
+            titre.insertAdjacentElement("beforeend", message);
+            RGPD.checked = false;
+        }
+        e.preventDefault();
+    });
+}
+
+
+    
 
 
 // Bonus supplémentaire : Fermer le menu responsive a l'ouverture de la modale
