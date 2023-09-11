@@ -195,6 +195,10 @@ function openContact() {
     const close = document.querySelector(".closeContact");
     const dialog = document.querySelector('dialog');
 
+    dialog.addEventListener("click", function (e) {
+        e.stopPropagation();
+    });
+    
     close.addEventListener("click", function (e) {
         dialog.remove();
         e.preventDefault();
