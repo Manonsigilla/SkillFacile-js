@@ -1,7 +1,5 @@
 # SkillFacile-js
 
-<img src="img/logo-blanc.png">
-
 ## Consignes :
 
 * Dark mode : Créer le code pour ajouter un dark mode au site SkillFacile
